@@ -1,5 +1,5 @@
 {
-  "name": "covent",
+  "name": "covent-patient-web",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -13,7 +13,6 @@
     "start": "next start",
     "lint": "next lint",
     "prettier": "prettier --write",
-    "prepare": "husky install",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "analyze": "cross-env ANALYZE=true next build"
@@ -70,7 +69,6 @@
     "eslint": "8.26.0",
     "eslint-config-next": "12.3.1",
     "eslint-plugin-storybook": "^0.6.6",
-    "husky": "^8.0.1",
     "postcss": "^8.4.14",
     "prettier": "^2.7.1",
     "storybook-addon-next-router": "^4.0.1",
