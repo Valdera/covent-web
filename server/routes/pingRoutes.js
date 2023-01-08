@@ -2,7 +2,7 @@
 const express = require("express");
 
 // File import
-const pingController = require("../controllers/pingController");
+const pingController = require("../controllers/ping/pingController");
 
 const router = express.Router();
 

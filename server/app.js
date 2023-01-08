@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser");
 
 // File import
 const CustomError = require("./utils/customError");
-const errorController = require("./controllers/errorController");
+const errorController = require("./controllers/error/errorController");
 const pingRouter = require("./routes/pingRoutes");
 const patientRouter = require("./routes/patientRoutes");
 const serviceRouter = require("./routes/serviceRoutes");
