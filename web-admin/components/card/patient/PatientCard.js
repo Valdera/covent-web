@@ -1,4 +1,4 @@
-import { Grid, Input, Text } from "@chakra-ui/react";
+import { Button, Grid, Input, Link, Text } from "@chakra-ui/react";
 
 const PatientCard = ({ data }) => {
   return (
@@ -35,6 +35,10 @@ const PatientCard = ({ data }) => {
       {/* KTP NUMBER */}
       <Text className="font-bold">Nomor KTP: </Text>
       <Input value={data.ktpNumber} isReadOnly variant={"filled"} />
+
+      <Link href={`/patient/${data._id}`} style={{ textDecoration: "none" }}>
+        <Button>Lihat Detail</Button>
+      </Link>
     </Grid>
   );
 };

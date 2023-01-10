@@ -58,7 +58,6 @@ const mock = [
 const DoctorCard = ({ data }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [scheduleList, setScheduleList] = useState([]);
-  const [scrollBehavior, setScrollBehavior] = useState("inside");
 
   const handleOpen = () => {
     setScheduleList(mock);
@@ -87,7 +86,7 @@ const DoctorCard = ({ data }) => {
         </HStack>
       </Grid>
       <Modal
-        scrollBehavior={scrollBehavior}
+        scrollBehavior={"inside"}
         onClose={onClose}
         isOpen={isOpen}
         isCentered

@@ -93,7 +93,7 @@ const AppointmentWaitingPage = () => {
       <div className="flex justify-center items-center flex-col m-10">
         <Stack align={"center"} marginBottom={"10"}>
           <Heading fontSize={"4xl"} fontFamily={"heading"}>
-            <span className="text-primary-400">Appointment Ongoing</span>
+            <span className="text-primary-400">Appointment Waiting</span>
           </Heading>
         </Stack>
 
