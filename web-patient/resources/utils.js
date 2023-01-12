@@ -7,9 +7,10 @@ export const isTokenExists = () => {
 
 export const defaultHandleErr = (data, setMessage) => {
   console.log(data);
-  if (data.response.data.message) {
+
+  try {
     setMessage(data.response.data.message);
-  } else {
+  } catch (error) {
     setMessage("Error from server");
   }
 };

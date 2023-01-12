@@ -1,5 +1,5 @@
 const config = {
-  SERVER_ADDR: "http://localhost:8080",
+  SERVER_ADDR: "https://covent.onrender.com",
 };
 
 export default config;
