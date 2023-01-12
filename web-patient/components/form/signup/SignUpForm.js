@@ -11,69 +11,76 @@ import {
   InputGroup,
   InputLeftAddon,
   InputRightElement,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Select,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
+import { ErrorContext } from "@context/errContext";
+import { Select } from "@mantine/core";
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
+import PatientAPI from "resources/patient/request";
+import { defaultHandleErr } from "resources/utils";
 import * as Yup from "yup";
 
 export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+  const { setMessage } = useContext(ErrorContext);
 
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
+      name: "",
       ktpNumber: "",
       phoneNumber: "",
-      age: 0,
+      birthdate: "",
       gender: "",
       email: "",
       password: "",
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required("Sorry, first name is required"),
-      lastName: Yup.string(),
+      name: Yup.string().required("Sorry, name is required"),
       email: Yup.string()
         .required("Sorry, email is required")
         .email("This is not a valid email"),
+      ktpNumber: Yup.string().required("Sorry, ktp number is required"),
+      phoneNumber: Yup.string().required("Sorry, phone number is required"),
+      birthdate: Yup.string().required("Sorry, birthdate is required"),
+      gender: Yup.number().required("Sorry, gender is required"),
       password: Yup.string()
         .min(7, "must be larger than 7 char")
         .required("Sorry, password is required"),
     }),
     onSubmit: (values) => {
-      console.log("first");
-      console.log(values);
+      const rsc = new PatientAPI();
+
+      rsc.register(
+        values,
+        () => {
+          router.reload(window.location.pathname);
+        },
+        (data) => defaultHandleErr(data, setMessage)
+      );
     },
   });
 
   return (
-    <Flex
-      minH={"100vh"}
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("background")}
-    >
-      <form onSubmit={formik.handleSubmit}>
+    <form onSubmit={formik.handleSubmit}>
+      <Flex
+        minH={"100vh"}
+        align={"center"}
+        justify={"center"}
+        bg={useColorModeValue("background")}
+      >
         <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
             <Heading fontSize={"4xl"} textAlign={"center"}>
               Dont Have an Account? Lets{" "}
               <span className="text-primary-400">Sign up</span>
             </Heading>
-            {/* <Text fontSize={"lg"} color={"gray.600"}>
-            to enjoy all of our cool features ✌️
-          </Text> */}
           </Stack>
           <Box
             rounded={"lg"}
@@ -83,57 +90,39 @@ export default function SignupForm() {
             onSubmit={formik.handleSubmit}
           >
             <Stack spacing={4}>
-              {/* FIRST NAME & LAST NAME */}
+              {/* NAME */}
 
-              <Flex gap={2} alignItems={"start"} justifyContent={"center"}>
-                <Box>
-                  <FormControl
-                    id="firstName"
-                    isRequired
-                    isInvalid={
-                      formik.errors.firstName && formik.touched["firstName"]
-                    }
-                  >
-                    <FormLabel>First Name</FormLabel>
-                    <Input
-                      type="text"
-                      name="firstName"
-                      {...formik.getFieldProps("firstName")}
-                    />
-                    <FormErrorMessage>
-                      {formik.errors.firstName}
-                    </FormErrorMessage>
-                  </FormControl>
-                </Box>
-                <Box>
-                  <FormControl id="lastName">
-                    <FormLabel>Last Name</FormLabel>
-                    <Input
-                      type="text"
-                      name="lastName"
-                      {...formik.getFieldProps("lastName")}
-                    />
-                  </FormControl>
-                </Box>
-              </Flex>
+              <FormControl
+                id="name"
+                isRequired
+                isInvalid={formik.errors.name && formik.touched["name"]}
+              >
+                <FormLabel>First Name</FormLabel>
+                <Input
+                  type="text"
+                  name="name"
+                  {...formik.getFieldProps("name")}
+                />
+                <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
+              </FormControl>
 
               {/* PHONE NUMBER */}
 
               <FormControl
-                id="phone"
+                id="phoneNumber"
                 isRequired
                 isInvalid={
                   formik.errors.phoneNumber && formik.touched["phoneNumber"]
                 }
               >
-                <FormLabel>Phone Number</FormLabel>
-                <InputGroup
-                  type="tel"
-                  name="phoneNumber"
-                  {...formik.getFieldProps("phoneNumber")}
-                >
-                  <InputLeftAddon children="+62" />
-                  <Input type="tel" />
+                <FormLabel>Nomor Telepon</FormLabel>
+                <InputGroup type="tel">
+                  <InputLeftAddon>+62</InputLeftAddon>
+                  <Input
+                    type="tel"
+                    name="phoneNumber"
+                    {...formik.getFieldProps("phoneNumber")}
+                  />
                 </InputGroup>
                 <FormErrorMessage>{formik.errors.phoneNumber}</FormErrorMessage>
               </FormControl>
@@ -147,7 +136,7 @@ export default function SignupForm() {
                   formik.errors.ktpNumber && formik.touched["ktpNumber"]
                 }
               >
-                <FormLabel>KTP Number</FormLabel>
+                <FormLabel>Nomor KTP</FormLabel>
                 <Input
                   name="ktpNumber"
                   {...formik.getFieldProps("ktpNumber")}
@@ -155,52 +144,45 @@ export default function SignupForm() {
                 <FormErrorMessage>{formik.errors.ktpNumber}</FormErrorMessage>
               </FormControl>
 
-              {/* AGE & GENDER */}
+              {/* birthdate */}
 
-              <Flex gap={2} alignItems={"start"} justifyContent={"center"}>
-                <Box>
-                  <FormControl
-                    id="age"
-                    isRequired
-                    isInvalid={formik.errors.age && formik.touched["age"]}
-                  >
-                    <FormLabel>Age</FormLabel>
-                    <NumberInput
-                      max={100}
-                      min={0}
-                      name="age"
-                      onChange={(v) => {
-                        formik.setFieldValue("age", v);
-                      }}
-                      value={formik.values.age}
-                    >
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                    <FormErrorMessage>{formik.errors.age}</FormErrorMessage>
-                  </FormControl>
-                </Box>
-                <Box>
-                  <FormControl
-                    id="gender"
-                    isRequired
-                    isInvalid={formik.errors.gender && formik.touched["gender"]}
-                  >
-                    <FormLabel>Gender</FormLabel>
-                    <Select
-                      placeholder="Select gender"
-                      {...formik.getFieldProps("gender")}
-                    >
-                      <option value={0}>Female</option>
-                      <option value={1}>Male</option>
-                    </Select>
-                    <FormErrorMessage>{formik.errors.gender}</FormErrorMessage>
-                  </FormControl>
-                </Box>
-              </Flex>
+              <FormControl
+                id="birthdate"
+                isRequired
+                isInvalid={
+                  formik.errors.birthdate && formik.touched["birthdate"]
+                }
+              >
+                <FormLabel>Tanggal Lahir</FormLabel>
+                <Input
+                  placeholder="Select Date and Time"
+                  size="md"
+                  type="date"
+                  {...formik.getFieldProps("birthdate")}
+                />
+                <FormErrorMessage>{formik.errors.birthdate}</FormErrorMessage>
+              </FormControl>
+
+              {/* GENDER */}
+
+              <FormControl
+                id="gender"
+                isRequired
+                isInvalid={formik.errors.gender && formik.touched["gender"]}
+              >
+                <FormLabel>Gender</FormLabel>
+                <Select
+                  placeholder="Pilih jenis kelamin"
+                  data={[
+                    { label: "Wanita", value: 0 },
+                    { label: "Pria", value: 1 },
+                  ]}
+                  onChange={(v) => {
+                    formik.setFieldValue("gender", v);
+                  }}
+                />
+                <FormErrorMessage>{formik.errors.gender}</FormErrorMessage>
+              </FormControl>
 
               {/* EMAIL */}
 
@@ -209,7 +191,7 @@ export default function SignupForm() {
                 isRequired
                 isInvalid={formik.errors.email && formik.touched["email"]}
               >
-                <FormLabel>Email address</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <Input
                   type="email"
                   name="email"
@@ -273,7 +255,7 @@ export default function SignupForm() {
             </Stack>
           </Box>
         </Stack>
-      </form>
-    </Flex>
+      </Flex>
+    </form>
   );
 }

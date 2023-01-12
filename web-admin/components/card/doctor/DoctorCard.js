@@ -14,54 +14,19 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import ScheduleAPI from "resources/schedule/request";
 import ScheduleCard from "../schedule/ScheduleCard";
-
-const mock = [
-  {
-    _id: "63bb438ab99d80e393cdf025",
-    totalPatient: 5,
-    doctor: "63bb05be2c864ea489620cbc",
-    startTime: "2023-01-20T10:20:00.000Z",
-    endTime: "2023-01-20T10:20:00.000Z",
-    __v: 0,
-    id: "63bb438ab99d80e393cdf025",
-  },
-  {
-    _id: "63bb438ab99d80e393cdf025",
-    totalPatient: 5,
-    doctor: "63bb05be2c864ea489620cbc",
-    startTime: "2023-01-20T10:20:00.000Z",
-    endTime: "2023-01-20T10:20:00.000Z",
-    __v: 0,
-    id: "63bb438ab99d80e393cdf025",
-  },
-  {
-    _id: "63bb438ab99d80e393cdf025",
-    totalPatient: 5,
-    doctor: "63bb05be2c864ea489620cbc",
-    startTime: "2023-01-20T10:20:00.000Z",
-    endTime: "2023-01-20T10:20:00.000Z",
-    __v: 0,
-    id: "63bb438ab99d80e393cdf025",
-  },
-  {
-    _id: "63bb438ab99d80e393cdf025",
-    totalPatient: 5,
-    doctor: "63bb05be2c864ea489620cbc",
-    startTime: "2023-01-20T10:20:00.000Z",
-    endTime: "2023-01-20T10:20:00.000Z",
-    __v: 0,
-    id: "63bb438ab99d80e393cdf025",
-  },
-];
 
 const DoctorCard = ({ data }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [scheduleList, setScheduleList] = useState([]);
 
-  const handleOpen = () => {
-    setScheduleList(mock);
-    onOpen();
+  const handleOpen = async () => {
+    const rsc = new ScheduleAPI();
+    await rsc.getAllScheduleByDoctorId(data._id, (data) => {
+      setScheduleList(data.data.data);
+      onOpen();
+    });
   };
 
   return (

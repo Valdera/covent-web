@@ -16,9 +16,17 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
+import { ErrorContext } from "@context/errContext";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useContext } from "react";
+import AdminAPI from "resources/admin/request";
+import { defaultHandleErr } from "resources/utils";
 
 export default function LoginForm() {
+  const router = useRouter();
+  const { setMessage } = useContext(ErrorContext);
+
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -29,7 +37,16 @@ export default function LoginForm() {
       password: Yup.string().required("Sorry, password is required"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      const rsc = new AdminAPI();
+      rsc.login(
+        values,
+        () => {
+          router.reload(window.location.pathname);
+        },
+        (data) => {
+          defaultHandleErr(data, setMessage);
+        }
+      );
     },
   });
 

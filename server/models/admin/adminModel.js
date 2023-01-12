@@ -1,22 +1,24 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-const adminSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: [true, "Please enter your name"],
+const adminSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      unique: true,
+      lowercase: true,
+
+      required: [true, "Please enter your name"],
+    },
+    password: {
+      type: String,
+      required: [true, "Please enter your password"],
+    },
   },
-  password: {
-    type: String,
-    required: [true, "Please enter your password"],
-  },
-  createdAt: {
-    type: Date,
-  },
-  updatedAt: {
-    type: Date,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 adminSchema.pre("save", async function (next) {
   // Only run this function if password was actually modified

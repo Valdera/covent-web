@@ -1,5 +1,5 @@
-const Admin = require("@models/admin/adminModel");
-const { filterObj } = require("@utils/filter");
+const Admin = require("../../models/admin/adminModel");
+const { filterObj } = require("../../utils/filter");
 
 exports.createAdmin = async (body) => {
   const filteredBody = filterObj(body, "username", "password");

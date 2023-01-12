@@ -1,5 +1,5 @@
-const Specialization = require("@models/specialization/specializationModel");
-const { filterObj } = require("@utils/filter");
+const Specialization = require("../../models/specialization/specializationModel");
+const { filterObj } = require("../../utils/filter");
 
 exports.createSpecialization = async (body) => {
   const filteredBody = filterObj(body, "name");

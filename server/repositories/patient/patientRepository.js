@@ -1,5 +1,5 @@
-const Patient = require("@models/patient/patientModel");
-const { filterObj } = require("@utils/filter");
+const Patient = require("../../models/patient/patientModel");
+const { filterObj } = require("../../utils/filter");
 
 exports.createPatient = async (body) => {
   const filteredBody = filterObj(
@@ -7,7 +7,7 @@ exports.createPatient = async (body) => {
     "email",
     "password",
     "name",
-    "age",
+    "birthdate",
     "gender",
     "phoneNumber",
     "ktpNumber"
@@ -35,7 +35,7 @@ exports.updatePatientById = async (id, body) => {
   const filteredBody = filterObj(
     body,
     "name",
-    "age",
+    "birthdate",
     "gender",
     "phoneNumber",
     "ktpNumber"

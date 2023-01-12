@@ -1,7 +1,7 @@
-const catchAsync = require("@utils/catchAsync");
-const CustomError = require("@utils/customError");
+const catchAsync = require("../../utils/catchAsync");
+const CustomError = require("../../utils/customError");
 
-const scheduleRepository = require("@repositories/schedule/scheduleRepository");
+const scheduleRepository = require("../../repositories/schedule/scheduleRepository");
 
 exports.createSchedule = catchAsync(async (req, res, next) => {
   const schedule = await scheduleRepository.createSchedule(req.body);
@@ -32,7 +32,7 @@ exports.getScheduleById = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getAllScheduleByDoctor = catchAsync(async (req, res, next) => {
+exports.getAllScheduleByDoctorId = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
   const schedules = await scheduleRepository.getAllScheduleByDoctorId(id);

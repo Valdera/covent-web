@@ -1,22 +1,21 @@
 const mongoose = require("mongoose");
 
-const doctorSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, "Please enter your name"],
+const doctorSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Please enter your name"],
+    },
+    specialization: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Specialization",
+      required: [true, "Please enter your password"],
+    },
   },
-  specialization: {
-    type: mongoose.Schema.ObjectId,
-    ref: "Specialization",
-    required: [true, "Please enter your password"],
-  },
-  createdAt: {
-    type: Date,
-  },
-  updatedAt: {
-    type: Date,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 doctorSchema.pre(/^find/, function (next) {
   this.populate({

@@ -1,7 +1,7 @@
-const catchAsync = require("@utils/catchAsync");
-const CustomError = require("@utils/customError");
+const catchAsync = require("../../utils/catchAsync");
+const CustomError = require("../../utils/customError");
 
-const patientRepository = require("@repositories/patient/patientRepository");
+const patientRepository = require("../../repositories/patient/patientRepository");
 
 exports.createPatient = catchAsync(async (req, res, next) => {
   const patient = await patientRepository.createPatient(req.body);
@@ -25,6 +25,17 @@ exports.getPatientById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
   const patient = await patientRepository.getPatientById(id);
+
+  res.status(200).json({
+    status: "success",
+    data: patient,
+  });
+});
+
+exports.getPatientMe = catchAsync(async (req, res, next) => {
+  const user = req.user;
+
+  const patient = await patientRepository.getPatientById(user._id);
 
   res.status(200).json({
     status: "success",

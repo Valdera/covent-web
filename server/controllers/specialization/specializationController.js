@@ -1,7 +1,7 @@
-const catchAsync = require("@utils/catchAsync");
-const CustomError = require("@utils/customError");
+const catchAsync = require("../../utils/catchAsync");
+const CustomError = require("../../utils/customError");
 
-const specializationRepository = require("@repositories/specialization/specializationRepository");
+const specializationRepository = require("../../repositories/specialization/specializationRepository");
 
 exports.createSpecialization = catchAsync(async (req, res, next) => {
   const specialization = await specializationRepository.createSpecialization(
@@ -15,7 +15,7 @@ exports.createSpecialization = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllSpecialization = catchAsync(async (req, res, next) => {
-  const specializations = await specializationRepository.getAllSchedule();
+  const specializations = await specializationRepository.getAllSpecialization();
 
   res.status(200).json({
     status: "success",

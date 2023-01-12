@@ -1,9 +1,15 @@
 import { Badge, Box, Grid, Input, Text, Textarea } from "@chakra-ui/react";
 
 const statusToBadge = {
-  "waiting for approval": "gray",
-  approved: "green",
-  declined: "red",
+  CREATED: "gray",
+  ACCEPTED: "green",
+  DONE: "green",
+  CANCELLED: "red",
+};
+
+const toLocaleDate = (date) => {
+  const d = new Date(date);
+  return d.toLocaleString();
 };
 
 const AppointmentCard = ({ data }) => {
@@ -16,11 +22,7 @@ const AppointmentCard = ({ data }) => {
     >
       {/* PATIENT NAME */}
       <Text className="font-bold">Pasien: </Text>
-      <Input
-        value={`${data.patient.firstName} ${data.patient.lastName}`}
-        isReadOnly
-        variant={"filled"}
-      />
+      <Input value={data.patient.name} isReadOnly variant={"filled"} />
 
       {/* DOCTOR NAME */}
       <Text className="font-bold">Dokter: </Text>
@@ -28,11 +30,19 @@ const AppointmentCard = ({ data }) => {
 
       {/* SPECIALIZATION */}
       <Text className="font-bold">Spesialisasi: </Text>
-      <Input value={data.specialization} isReadOnly variant={"filled"} />
+      <Input
+        value={data.doctor.specialization.name}
+        isReadOnly
+        variant={"filled"}
+      />
 
       {/* SCHEDULE */}
       <Text className="font-bold">Jadwal: </Text>
-      <Input value={data.schedule} isReadOnly variant={"filled"} />
+      <Input
+        value={toLocaleDate(data.schedule.startTime)}
+        isReadOnly
+        variant={"filled"}
+      />
 
       {/* ISSUE */}
       <Text className="font-bold">Masalah: </Text>
@@ -45,6 +55,14 @@ const AppointmentCard = ({ data }) => {
           {data.status}
         </Badge>
       </Box>
+
+      {/* SCHEDULE */}
+      <Text className="font-bold">Created At: </Text>
+      <Input
+        value={toLocaleDate(data.createdAt)}
+        isReadOnly
+        variant={"filled"}
+      />
     </Grid>
   );
 };

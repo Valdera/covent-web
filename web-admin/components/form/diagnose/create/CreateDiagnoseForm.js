@@ -7,93 +7,31 @@ import {
   Stack,
   Textarea,
 } from "@chakra-ui/react";
+import { ErrorContext } from "@context/errContext";
 import { Select } from "@mantine/core";
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
+import AppointmentAPI from "resources/appointment/request";
+import DiagnoseAPI from "resources/diagnose/request";
+import DoctorAPI from "resources/doctors/request";
+import { defaultHandleErr } from "resources/utils";
 import * as Yup from "yup";
 
-const mock = [
-  {
-    _id: "63bb05be2c864ea489620cbc",
-    name: "dr. Angelica",
-    specialization: {
-      _id: "63bb04982c864ea489620cb4",
-      name: "Umum",
-      id: "63bb04982c864ea489620cb4",
-    },
-    __v: 0,
-  },
-  {
-    _id: "63bb05d82c864ea489620cc2",
-    name: "dr. Ahmad",
-    specialization: {
-      _id: "63bb04982c864ea489620cb4",
-      name: "Umum",
-      id: "63bb04982c864ea489620cb4",
-    },
-    __v: 0,
-  },
-  {
-    _id: "63bb05de2c864ea489620cc4",
-    name: "dr. Arigi",
-    specialization: {
-      _id: "63bb04982c864ea489620cb4",
-      name: "Umum",
-      id: "63bb04982c864ea489620cb4",
-    },
-    __v: 0,
-  },
-  {
-    _id: "63bb05f32c864ea489620cc6",
-    name: "dr. Aldi",
-    specialization: {
-      _id: "63bb04942c864ea489620cb2",
-      name: "Anak",
-      id: "63bb04942c864ea489620cb2",
-    },
-    __v: 0,
-  },
-  {
-    _id: "63bb06032c864ea489620cc8",
-    name: "dr. Anto",
-    specialization: {
-      _id: "63bb04942c864ea489620cb2",
-      name: "Anak",
-      id: "63bb04942c864ea489620cb2",
-    },
-    __v: 0,
-  },
-  {
-    _id: "63bb06162c864ea489620cca",
-    name: "dr. Rizki",
-    specialization: {
-      _id: "63bb04a02c864ea489620cb6",
-      name: "THT",
-      id: "63bb04a02c864ea489620cb6",
-    },
-    __v: 0,
-  },
-  {
-    _id: "63bb06372c864ea489620ccc",
-    name: "dr. Adela",
-    specialization: {
-      _id: "63bb048e2c864ea489620cb0",
-      name: "Orthopedi",
-      id: "63bb048e2c864ea489620cb0",
-    },
-    __v: 0,
-  },
-];
-
-const CreateDiagnoseForm = ({ data }) => {
+const CreateDiagnoseForm = ({ data, onClose }) => {
   const [doctorList, setDoctorList] = useState([]);
+  const router = useRouter();
+  const { setMessage } = useContext(ErrorContext);
 
   useEffect(() => {
-    setDoctorList(
-      mock.map((v) => {
-        return { label: v.name, value: v._id };
-      })
-    );
+    const rsc = new DoctorAPI();
+    rsc.getAllDoctor((data) => {
+      setDoctorList(
+        data.data.data.map((v) => {
+          return { label: v.name, value: v._id };
+        })
+      );
+    });
 
     return () => {};
   }, []);
@@ -111,7 +49,26 @@ const CreateDiagnoseForm = ({ data }) => {
       description: Yup.string().required("Sorry, description is required"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      const rscDiagnose = new DiagnoseAPI();
+      rscDiagnose.createDiagnose(
+        values,
+        () => {
+          const rscAppointment = new AppointmentAPI();
+          rscAppointment.doneAppointment(
+            data._id,
+            () => {
+              onClose();
+              router.reload(window.location.pathname);
+            },
+            (data) => {
+              defaultHandleErr(data, setMessage);
+            }
+          );
+        },
+        (data) => {
+          defaultHandleErr(data, setMessage);
+        }
+      );
     },
   });
 

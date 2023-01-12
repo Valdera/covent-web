@@ -6,7 +6,9 @@ const config = require("./config");
 const app = require("./app");
 
 // Connect to mongoDB database
+
 mongoose
+  .set("strictQuery", false)
   .connect(config.DB, {
     useNewUrlParser: true,
   })

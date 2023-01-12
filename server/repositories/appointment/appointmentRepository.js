@@ -1,5 +1,5 @@
-const Appointment = require("@models/appointment/appointmentModel");
-const { filterObj } = require("@utils/filter");
+const Appointment = require("../../models/appointment/appointmentModel");
+const { filterObj } = require("../../utils/filter");
 
 exports.createAppointment = async (body) => {
   const filteredBody = filterObj(
@@ -16,7 +16,9 @@ exports.createAppointment = async (body) => {
 };
 
 exports.getAllAppointment = async () => {
-  const appointment = await Appointment.find();
+  const appointment = await Appointment.find().sort({
+    createdAt: -1,
+  });
   return appointment;
 };
 
@@ -26,12 +28,14 @@ exports.getAppointmentById = async (id) => {
 };
 
 exports.getAllAppointmentByPatientId = async (patient) => {
-  const appointments = await Appointment.find({ patient });
+  const appointments = await Appointment.find({ patient }).sort({
+    createdAt: -1,
+  });
   return appointments;
 };
 
 exports.getAllAppointmentByDoctorId = async (doctor) => {
-  const appointments = await Appointment.find({ doctor });
+  const appointments = await Appointment.find({ doctor }).sort("createdAt");
   return appointments;
 };
 

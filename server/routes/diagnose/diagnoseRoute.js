@@ -1,15 +1,17 @@
-// Module import
 const express = require("express");
 
-// File import
-const diagnoseController = require("../controllers/diagnoseController");
+const diagnoseController = require("../../controllers/diagnose/diagnoseController");
 
 const router = express.Router();
 
-// Routes (/v1/ping)
 router.route("/").post(diagnoseController.createDiagnose);
+
 router.route("/").get(diagnoseController.getAllDiagnose);
-router.route("/:id").get(diagnoseController.getDiagnoseByID);
-router.route("/:id").patch(diagnoseController.updateDiagnoseById);
+
+router.route("/patient/:id").get(diagnoseController.getAllDiagnoseByPatientId);
+
+router.route("/:id").get(diagnoseController.getDianoseById);
+
 router.route("/:id").delete(diagnoseController.deleteDiagnoseById);
+
 module.exports = router;

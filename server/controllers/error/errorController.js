@@ -5,8 +5,6 @@ const errorController = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
 
-  console.log("MASUKIN", err);
-
   if (config.NodeEnv === "PRODUCTION") {
     let error = { ...err };
     error.message = err.message;

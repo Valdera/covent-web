@@ -1,38 +1,35 @@
 const mongoose = require("mongoose");
 
-const diagnoseSchema = new mongoose.Schema({
-  patient: {
-    type: mongoose.Schema.ObjectId,
-    ref: "Patient",
-    required: [true, "Please enter the patient id"],
+const diagnoseSchema = new mongoose.Schema(
+  {
+    patient: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Patient",
+      required: [true, "Please enter the patient id"],
+    },
+    doctor: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Doctor",
+      required: [true, "Please enter the doctor id"],
+    },
+    disease: {
+      type: String,
+      required: [true, "Please enter the disease"],
+    },
+    description: {
+      type: String,
+      required: [true, "Please enter the description"],
+    },
   },
-  doctor: {
-    type: mongoose.Schema.ObjectId,
-    ref: "Doctor",
-    required: [true, "Please enter the doctor id"],
-  },
-  disease: {
-    type: String,
-    required: [true, "Please enter the disease"],
-  },
-  description: {
-    type: String,
-    required: [true, "Please enter the description"],
-  },
-  createdAt: {
-    type: Date,
-    required: [true, "Please enter the date"],
-  },
-  updatedAt: {
-    type: Date,
-    required: [true, "Please enter the date"],
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
-doctorSchema.pre(/^find/, function (next) {
+diagnoseSchema.pre(/^find/, function (next) {
   this.populate({
     path: "patient",
-    select: "_id name",
+    select: "_id name birthdate",
   });
 
   this.populate({

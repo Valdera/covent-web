@@ -6,40 +6,20 @@ import {
   Input,
   Stack,
 } from "@chakra-ui/react";
+import { ErrorContext } from "@context/errContext";
 import { Select } from "@mantine/core";
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
+import DoctorAPI from "resources/doctors/request";
+import SpecializationAPI from "resources/specialization/request";
+import { defaultHandleErr } from "resources/utils";
 import * as Yup from "yup";
-
-const mock = [
-  {
-    _id: "63bb048e2c864ea489620cb0",
-    name: "Orthopedi",
-    __v: 0,
-    id: "63bb048e2c864ea489620cb0",
-  },
-  {
-    _id: "63bb04942c864ea489620cb2",
-    name: "Anak",
-    __v: 0,
-    id: "63bb04942c864ea489620cb2",
-  },
-  {
-    _id: "63bb04982c864ea489620cb4",
-    name: "Umum",
-    __v: 0,
-    id: "63bb04982c864ea489620cb4",
-  },
-  {
-    _id: "63bb04a02c864ea489620cb6",
-    name: "THT",
-    __v: 0,
-    id: "63bb04a02c864ea489620cb6",
-  },
-];
 
 const CreateDoctorForm = () => {
   const [specializationList, setSpecializationList] = useState([]);
+  const router = useRouter();
+  const { setMessage } = useContext(ErrorContext);
 
   const formik = useFormik({
     initialValues: {
@@ -54,15 +34,28 @@ const CreateDoctorForm = () => {
     }),
     onSubmit: (values) => {
       console.log(values);
+      const rsc = new DoctorAPI();
+      rsc.createDoctor(
+        values,
+        () => {
+          router.reload(window.location.pathname);
+        },
+        (data) => {
+          defaultHandleErr(data, setMessage);
+        }
+      );
     },
   });
 
   useEffect(() => {
-    setSpecializationList(
-      mock.map((v) => {
-        return { label: v.name, value: v.id };
-      })
-    );
+    const rsc = new SpecializationAPI();
+    rsc.getAllSpecialization((data) => {
+      setSpecializationList(
+        data.data.data.map((v) => {
+          return { label: v.name, value: v.id };
+        })
+      );
+    });
 
     return () => {};
   }, []);
@@ -102,6 +95,22 @@ const CreateDoctorForm = () => {
             getCreateLabel={(query) => `+ Create ${query}`}
             onCreate={(query) => {
               console.log(query);
+              const rsc = new SpecializationAPI();
+              rsc.createSpecialization(
+                { name: query },
+                () => {
+                  rsc.getAllSpecialization((data) => {
+                    setSpecializationList(
+                      data.data.data.map((v) => {
+                        return { label: v.name, value: v.id };
+                      })
+                    );
+                  });
+                },
+                (data) => {
+                  defaultHandleErr(data, setMessage);
+                }
+              );
             }}
           />
         </FormControl>

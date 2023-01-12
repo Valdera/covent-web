@@ -15,14 +15,20 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { ErrorContext } from "@context/errContext";
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
+import AdminAPI from "resources/admin/request";
+import { defaultHandleErr } from "resources/utils";
 import * as Yup from "yup";
 
 export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+  const { setMessage } = useContext(ErrorContext);
 
   const formik = useFormik({
     initialValues: {
@@ -34,7 +40,16 @@ export default function SignupForm() {
       password: Yup.string().required("Sorry, password is required"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      const rsc = new AdminAPI();
+      rsc.register(
+        values,
+        () => {
+          router.reload(window.location.pathname);
+        },
+        (data) => {
+          defaultHandleErr(data, setMessage);
+        }
+      );
     },
   });
 

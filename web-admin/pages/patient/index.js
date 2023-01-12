@@ -1,54 +1,29 @@
 import { Input, Text, VStack } from "@chakra-ui/react";
 
 import PatientCard from "@components/card/patient/PatientCard";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
-const mock = [
-  {
-    _id: "63bb0380080662715abad18c",
-    email: "admin@gmail.com",
-    password: "$2a$12$EKgMSgGSs4h6H7AclDh.xujRfZ5rPstIcrPUxJRM06LtYgh1rqMdG",
-    name: "Fauzan Eldera",
-    age: 12,
-    gender: 1,
-    phoneNumber: "087884526580",
-    ktpNumber: "12343907012734",
-    __v: 0,
-  },
-  {
-    _id: "63bb0380080662715abad18c",
-    email: "admin@gmail.com",
-    password: "$2a$12$EKgMSgGSs4h6H7AclDh.xujRfZ5rPstIcrPUxJRM06LtYgh1rqMdG",
-    name: "Fauzan Valdera",
-    age: 12,
-    gender: 1,
-    phoneNumber: "087884526580",
-    ktpNumber: "12343907012734",
-    __v: 0,
-  },
-  {
-    _id: "63bb0380080662715abad18c",
-    email: "valdera@gmail.com",
-    password: "$2a$12$EKgMSgGSs4h6H7AclDh.xujRfZ5rPstIcrPUxJRM06LtYgh1rqMdG",
-    name: "Helkia Yeremia",
-    age: 12,
-    gender: 1,
-    phoneNumber: "087884526580",
-    ktpNumber: "12343907012734",
-    __v: 0,
-  },
-];
+import PatientAPI from "resources/patient/request";
+import { isTokenExists } from "resources/utils";
 
 const PatientPage = () => {
   const [patients, setPatients] = useState([]);
   const [filteredPatients, setFilteredPatients] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
-    setPatients(mock);
-    setFilteredPatients(mock);
+    if (!isTokenExists()) {
+      router.push("/login");
+    }
+
+    const rsc = new PatientAPI();
+    rsc.getAllPatient((data) => {
+      setPatients(data.data.data);
+      setFilteredPatients(data.data.data);
+    });
 
     return () => {};
-  }, []);
+  });
 
   const handleChange = (event) => {
     const value = patients.filter((val) =>

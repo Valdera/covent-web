@@ -1,7 +1,7 @@
-const catchAsync = require("@utils/catchAsync");
-const CustomError = require("@utils/customError");
+const catchAsync = require("../../utils/catchAsync");
+const CustomError = require("../../utils/customError");
 
-const diagnoseRepository = require("@repositories/diagnose/diagnoseRepository");
+const diagnoseRepository = require("../../repositories/diagnose/diagnoseRepository");
 
 exports.createDiagnose = catchAsync(async (req, res, next) => {
   const diagnose = await diagnoseRepository.createDiagnose(req.body);

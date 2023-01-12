@@ -1,5 +1,5 @@
-const Doctor = require("@models/doctor/doctorModel");
-const { filterObj } = require("@utils/filter");
+const Doctor = require("../../models/doctor/doctorModel");
+const { filterObj } = require("../../utils/filter");
 
 exports.createDoctor = async (body) => {
   const filteredBody = filterObj(body, "name", "specialization");

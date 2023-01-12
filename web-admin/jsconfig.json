@@ -7,7 +7,8 @@
       "@styles/*": ["styles/*"],
       "@assets/*": ["assets/*"],
       "@test/*": ["test/*"],
-      "@lib/*": ["lib/*"]
+      "@lib/*": ["lib/*"],
+      "@context/*": ["context/*"]
     }
   },
   "exclude": ["node_modules/"]

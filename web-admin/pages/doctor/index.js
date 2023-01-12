@@ -16,82 +16,12 @@ import FloatingActionButton from "@components/button/floating-action/FloatingAct
 import DoctorCard from "@components/card/doctor/DoctorCard";
 import CreateDoctorForm from "@components/form/doctor/create/CreateDoctorForm";
 import CreateScheduleForm from "@components/form/schedule/create/CreateSchedule";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { MdPeople } from "react-icons/md";
-
-const mock = [
-  {
-    _id: "63bb05be2c864ea489620cbc",
-    name: "dr. Angelica",
-    specialization: {
-      _id: "63bb04982c864ea489620cb4",
-      name: "Umum",
-      id: "63bb04982c864ea489620cb4",
-    },
-    __v: 0,
-  },
-  {
-    _id: "63bb05d82c864ea489620cc2",
-    name: "dr. Ahmad",
-    specialization: {
-      _id: "63bb04982c864ea489620cb4",
-      name: "Umum",
-      id: "63bb04982c864ea489620cb4",
-    },
-    __v: 0,
-  },
-  {
-    _id: "63bb05de2c864ea489620cc4",
-    name: "dr. Arigi",
-    specialization: {
-      _id: "63bb04982c864ea489620cb4",
-      name: "Umum",
-      id: "63bb04982c864ea489620cb4",
-    },
-    __v: 0,
-  },
-  {
-    _id: "63bb05f32c864ea489620cc6",
-    name: "dr. Aldi",
-    specialization: {
-      _id: "63bb04942c864ea489620cb2",
-      name: "Anak",
-      id: "63bb04942c864ea489620cb2",
-    },
-    __v: 0,
-  },
-  {
-    _id: "63bb06032c864ea489620cc8",
-    name: "dr. Anto",
-    specialization: {
-      _id: "63bb04942c864ea489620cb2",
-      name: "Anak",
-      id: "63bb04942c864ea489620cb2",
-    },
-    __v: 0,
-  },
-  {
-    _id: "63bb06162c864ea489620cca",
-    name: "dr. Rizki",
-    specialization: {
-      _id: "63bb04a02c864ea489620cb6",
-      name: "THT",
-      id: "63bb04a02c864ea489620cb6",
-    },
-    __v: 0,
-  },
-  {
-    _id: "63bb06372c864ea489620ccc",
-    name: "dr. Adela",
-    specialization: {
-      _id: "63bb048e2c864ea489620cb0",
-      name: "Orthopedi",
-      id: "63bb048e2c864ea489620cb0",
-    },
-    __v: 0,
-  },
-];
+import DoctorAPI from "resources/doctors/request";
+import { isTokenExists } from "resources/utils";
 
 const DoctorPage = () => {
   const [doctors, setDoctors] = useState([]);
@@ -107,12 +37,21 @@ const DoctorPage = () => {
     onClose: onCloseSchedule,
   } = useDisclosure();
 
+  const router = useRouter();
+
   useEffect(() => {
-    setDoctors(mock);
-    setFilteredDoctors(mock);
+    if (!isTokenExists()) {
+      router.push("/login");
+    }
+
+    const rsc = new DoctorAPI();
+    rsc.getAllDoctor((data) => {
+      setDoctors(data.data.data);
+      setFilteredDoctors(data.data.data);
+    });
 
     return () => {};
-  }, []);
+  }, [router]);
 
   const handleChange = (event) => {
     const value = doctors.filter((val) =>

@@ -1,9 +1,9 @@
 import { Grid, Input, Text, Textarea } from "@chakra-ui/react";
 
-// const toLocaleDate = (date) => {
-//   const d = new Date(date);
-//   return d.toLocaleString();
-// };
+const toLocaleDate = (date) => {
+  const d = new Date(date);
+  return d.toLocaleString();
+};
 
 const DiagnoseCard = ({ data }) => {
   return (
@@ -35,14 +35,12 @@ const DiagnoseCard = ({ data }) => {
         <Textarea value={data.description} variant={"filled"} isReadOnly />
 
         {/* CREATED AT */}
-        {/* <Text className="font-bold">Jadwal: </Text>
+        <Text className="font-bold">Dibuat pada tanggal: </Text>
         <Input
-          value={`${toLocaleDate(data.schedule.startTime)} - ${toLocaleDate(
-            data.schedule.startTime
-          )}`}
+          value={toLocaleDate(data.createdAt)}
           isReadOnly
           variant={"filled"}
-        /> */}
+        />
       </Grid>
     </>
   );

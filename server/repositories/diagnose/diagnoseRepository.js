@@ -1,5 +1,5 @@
-const Diagnose = require("@models/diagnose/diagnoseModel");
-const { filterObj } = require("@utils/filter");
+const Diagnose = require("../../models/diagnose/diagnoseModel");
+const { filterObj } = require("../../utils/filter");
 
 exports.createDiagnose = async (body) => {
   const filteredBody = filterObj(
@@ -24,7 +24,9 @@ exports.getDiagnoseById = async (id) => {
 };
 
 exports.getAllDiagnoseByPatientId = async (patient) => {
-  const diagnoses = await Diagnose.find({ patient });
+  const diagnoses = await Diagnose.find({ patient }).sort({
+    createdAt: -1,
+  });
   return diagnoses;
 };
 

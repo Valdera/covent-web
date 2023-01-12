@@ -16,9 +16,21 @@ import DesktopNav from "./desktop/DesktopNavbar";
 import MobileNav from "./mobile/MobileNavbar";
 
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import PatientAPI from "resources/patient/request";
+import { isTokenExists } from "resources/utils";
 
 const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure();
+  const router = useRouter();
+  const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    setIsLogin(isTokenExists());
+
+    return () => {};
+  }, [router]);
 
   return (
     <Box>
@@ -63,40 +75,68 @@ const Navbar = () => {
           </Flex>
         </Flex>
 
-        <Stack
-          flex={{ base: 1, md: 0 }}
-          justify={"flex-end"}
-          direction={"row"}
-          spacing={6}
-        >
-          <Link href={"/login"}>
+        {!isLogin && (
+          <Stack
+            flex={{ base: 1, md: 0 }}
+            justify={"flex-end"}
+            direction={"row"}
+            spacing={6}
+          >
+            <Link href={"/login"}>
+              <Button
+                as={"a"}
+                fontSize={"sm"}
+                fontWeight={400}
+                fontFamily={"heading"}
+                variant={"link"}
+                className="cursor-pointer"
+              >
+                Sign In
+              </Button>
+            </Link>
+            <Link href={"/register"}>
+              <Button
+                display={{ base: "none", md: "inline-flex" }}
+                fontSize={"sm"}
+                fontWeight={600}
+                fontFamily={"heading"}
+                color={"white"}
+                bg={"secondary.500"}
+                _hover={{
+                  bg: "secondary.400",
+                }}
+              >
+                Sign Up
+              </Button>
+            </Link>
+          </Stack>
+        )}
+
+        {isLogin && (
+          <Stack
+            flex={{ base: 1, md: 0 }}
+            justify={"flex-end"}
+            direction={"row"}
+            spacing={6}
+          >
             <Button
-              as={"a"}
-              fontSize={"sm"}
-              fontWeight={400}
-              fontFamily={"heading"}
-              variant={"link"}
-              className="cursor-pointer"
-            >
-              Sign In
-            </Button>
-          </Link>
-          <Link href={"/register"}>
-            <Button
-              display={{ base: "none", md: "inline-flex" }}
               fontSize={"sm"}
               fontWeight={600}
               fontFamily={"heading"}
               color={"white"}
-              bg={"secondary.500"}
-              _hover={{
-                bg: "secondary.400",
+              colorScheme={"primary"}
+              onClick={() => {
+                const src = new PatientAPI();
+                src.logout(() => {
+                  setIsLogin(false);
+                  router.push("/login");
+                });
               }}
             >
-              Sign Up
+              Log Out
             </Button>
-          </Link>
-        </Stack>
+          </Stack>
+        )}
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>

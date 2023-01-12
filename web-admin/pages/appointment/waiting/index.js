@@ -1,92 +1,26 @@
 import { Heading, Stack, VStack } from "@chakra-ui/react";
 import AppointmentCard from "@components/card/appointment/AppointmentCard";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
-const mock = [
-  {
-    _id: "63bb0dc409b2c618819a8177",
-    patient: {
-      _id: "63bb0380080662715abad18c",
-      name: "Ahmad Valdera",
-    },
-    doctor: {
-      _id: "63bb05be2c864ea489620cbc",
-      name: "dr. Medica",
-      specialization: {
-        _id: "63bb04982c864ea489620cb4",
-        name: "Umum",
-        id: "63bb04982c864ea489620cb4",
-      },
-    },
-    schedule: {
-      _id: "63bb438ab99d80e393cdf025",
-      startTime: "2023-01-20T10:20:00.000Z",
-      endTime: "2023-01-20T10:20:00.000Z",
-      id: "63bb438ab99d80e393cdf025",
-    },
-    status: "CREATED",
-    issue: "Sakit Kepala",
-    __v: 0,
-  },
-  {
-    _id: "63bb0dc409b2c618819a8177",
-    patient: {
-      _id: "63bb0380080662715abad18c",
-      name: "Fauzan Valdera",
-    },
-    doctor: {
-      _id: "63bb05be2c864ea489620cbc",
-      name: "dr. Angelica",
-      specialization: {
-        _id: "63bb04982c864ea489620cb4",
-        name: "Umum",
-        id: "63bb04982c864ea489620cb4",
-      },
-    },
-    schedule: {
-      _id: "63bb438ab99d80e393cdf025",
-      startTime: "2023-01-20T10:20:00.000Z",
-      endTime: "2023-01-20T10:20:00.000Z",
-      id: "63bb438ab99d80e393cdf025",
-    },
-    status: "ACCEPTED",
-    issue: "Sakit Kepala",
-    __v: 0,
-  },
-  {
-    _id: "63bb0dc409b2c618819a8177",
-    patient: {
-      _id: "63bb0380080662715abad18c",
-      name: "Fauzan Valdera",
-    },
-    doctor: {
-      _id: "63bb05be2c864ea489620cbc",
-      name: "dr. Angelica",
-      specialization: {
-        _id: "63bb04982c864ea489620cb4",
-        name: "Umum",
-        id: "63bb04982c864ea489620cb4",
-      },
-    },
-    schedule: {
-      _id: "63bb438ab99d80e393cdf025",
-      startTime: "2023-01-20T10:20:00.000Z",
-      endTime: "2023-01-20T10:20:00.000Z",
-      id: "63bb438ab99d80e393cdf025",
-    },
-    status: "ACCEPTED",
-    issue: "Sakit Kepala",
-    __v: 0,
-  },
-];
+import AppointmentAPI from "resources/appointment/request";
+import { isTokenExists } from "resources/utils";
 
 const AppointmentWaitingPage = () => {
   const [appointments, setAppointments] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
-    setAppointments(mock);
+    if (!isTokenExists()) {
+      router.push("/login");
+    }
+
+    const rsc = new AppointmentAPI();
+    rsc.getAllAppointment((data) => {
+      setAppointments(data.data.data);
+    });
+
     return () => {};
-  }, []);
+  }, [router]);
 
   return (
     <>

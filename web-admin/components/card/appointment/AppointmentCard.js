@@ -16,11 +16,17 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import CreateDiagnoseForm from "@components/form/diagnose/create/CreateDiagnoseForm";
+import { ErrorContext } from "@context/errContext";
+import { useRouter } from "next/router";
+import { useContext } from "react";
+import AppointmentAPI from "resources/appointment/request";
+import { defaultHandleErr } from "resources/utils";
 
 const statusToBadge = {
-  "waiting for approval": "gray",
-  approved: "green",
-  declined: "red",
+  CREATED: "gray",
+  ACCEPTED: "green",
+  DONE: "green",
+  CANCELLED: "red",
 };
 
 const toLocaleDate = (date) => {
@@ -30,6 +36,9 @@ const toLocaleDate = (date) => {
 
 const AppointmentCard = ({ data }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
+
+  const { setMessage } = useContext(ErrorContext);
 
   return (
     <>
@@ -69,6 +78,14 @@ const AppointmentCard = ({ data }) => {
         <Text className="font-bold">Masalah: </Text>
         <Textarea value={data.issue} variant={"filled"} isReadOnly />
 
+        {/* CREATED AT */}
+        <Text className="font-bold">Created At: </Text>
+        <Input
+          value={toLocaleDate(data.createdAt)}
+          isReadOnly
+          variant={"filled"}
+        />
+
         {/* STATUS */}
         <Text className="font-bold">Status: </Text>
         <Box>
@@ -77,10 +94,40 @@ const AppointmentCard = ({ data }) => {
           </Badge>
           {data.status == "CREATED" && (
             <>
-              <Button className="ml-5" colorScheme={"green"}>
+              <Button
+                onClick={() => {
+                  const rsc = new AppointmentAPI();
+                  rsc.acceptAppointment(
+                    data._id,
+                    () => {
+                      router.reload(window.location.pathname);
+                    },
+                    (data) => {
+                      defaultHandleErr(data, setMessage);
+                    }
+                  );
+                }}
+                className="ml-5"
+                colorScheme={"green"}
+              >
                 Accept
               </Button>
-              <Button className="ml-5" colorScheme={"red"}>
+              <Button
+                onClick={() => {
+                  const rsc = new AppointmentAPI();
+                  rsc.cancelAppointment(
+                    data._id,
+                    () => {
+                      router.reload(window.location.pathname);
+                    },
+                    (data) => {
+                      defaultHandleErr(data, setMessage);
+                    }
+                  );
+                }}
+                className="ml-5"
+                colorScheme={"red"}
+              >
                 Cancel
               </Button>
             </>
@@ -104,7 +151,7 @@ const AppointmentCard = ({ data }) => {
           <ModalHeader>Buat Diagnosis</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <CreateDiagnoseForm data={data} />
+            <CreateDiagnoseForm data={data} onClose={onClose} />
           </ModalBody>
           <ModalFooter>
             <Button onClick={onClose}>Close</Button>

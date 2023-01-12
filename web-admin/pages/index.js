@@ -7,10 +7,13 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { AiFillSchedule } from "react-icons/ai";
 import { BsFillPersonLinesFill } from "react-icons/bs";
 import { GiDoctorFace } from "react-icons/gi";
 import { MdOutlineSchedule } from "react-icons/md";
+import { isTokenExists } from "resources/utils";
 
 const MenuCard = (props) => {
   const { title, icon, link } = props;
@@ -36,6 +39,16 @@ const MenuCard = (props) => {
 };
 
 const HomePage = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isTokenExists()) {
+      router.push("/login");
+    }
+
+    return () => {};
+  }, []);
+
   return (
     <Box
       maxW="7xl"

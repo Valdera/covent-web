@@ -10,17 +10,13 @@ const scheduleSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Doctor",
     },
-    date: {
+    startTime: {
       type: Date,
-      required: [true, "Please enter the date"],
+      required: [true, "Please enter the start time"],
     },
-    endHour: {
+    endTime: {
       type: Date,
-      required: [true, "Please enter the end hour"],
-    },
-    startHour: {
-      type: Date,
-      required: [true, "Please enter the start hour"],
+      required: [true, "Please enter the end time"],
     },
     createdAt: {
       type: Date,
@@ -32,6 +28,7 @@ const scheduleSchema = new mongoose.Schema(
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    timestamps: true,
   }
 );
 

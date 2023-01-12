@@ -1,7 +1,7 @@
-const catchAsync = require("@utils/catchAsync");
-const CustomError = require("@utils/customError");
+const catchAsync = require("../../utils/catchAsync");
+const CustomError = require("../../utils/customError");
 
-const adminRepository = require("@repositories/admin/adminRepository");
+const adminRepository = require("../../repositories/admin/adminRepository");
 
 exports.createAdmin = catchAsync(async (req, res, next) => {
   const admin = await adminRepository.createAdmin(req.body);

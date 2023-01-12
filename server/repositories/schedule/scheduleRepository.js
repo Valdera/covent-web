@@ -1,8 +1,14 @@
-const Schedule = require("@models/schedule/scheduleModel");
-const { filterObj } = require("@utils/filter");
+const Schedule = require("../../models/schedule/scheduleModel");
+const { filterObj } = require("../../utils/filter");
 
 exports.createSchedule = async (body) => {
-  const filteredBody = filterObj(body, "name");
+  const filteredBody = filterObj(
+    body,
+    "doctor",
+    "totalPatient",
+    "startTime",
+    "endTime"
+  );
   const schedule = await Schedule.create(filteredBody);
   return schedule;
 };
@@ -23,13 +29,7 @@ exports.getAllScheduleByDoctorId = async (doctor) => {
 };
 
 exports.udpateScheduleById = async (id, body) => {
-  const filteredBody = filterObj(
-    body,
-    "totalPatient",
-    "date",
-    "startHour",
-    "endHour"
-  );
+  const filteredBody = filterObj(body, "totalPatient", "startTime", "endTime");
   const schedule = await Schedule.findByIdAndUpdate(id, filteredBody, {
     new: true,
     runValidators: true,
