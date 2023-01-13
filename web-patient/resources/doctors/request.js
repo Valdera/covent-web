@@ -9,7 +9,7 @@ class DoctorAPI {
 
   getBearer() {
     const cookies = new Cookies();
-    return `Bearer ${cookies.get("token")}`;
+    return `Bearer ${cookies.get("jwt")}`;
   }
 
   async createDoctor(body, handleSuccess = () => {}, handleError = () => {}) {

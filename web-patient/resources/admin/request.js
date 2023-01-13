@@ -9,12 +9,12 @@ class AdminAPI {
 
   getBearer() {
     const cookies = new Cookies();
-    return `Bearer ${cookies.get("token")}`;
+    return `Bearer ${cookies.get("jwt")}`;
   }
 
   setToken(token) {
     const cookies = new Cookies();
-    cookies.set("token", token);
+    cookies.set("jwt", token);
   }
 
   async login(body, handleSuccess = () => {}, handleError = () => {}) {
@@ -39,7 +39,7 @@ class AdminAPI {
 
   async logout() {
     const cookies = new Cookies();
-    cookies.remove("token");
+    cookies.remove("jwt");
   }
 }
 

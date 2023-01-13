@@ -2,7 +2,7 @@ import Cookies from "universal-cookie";
 
 export const isTokenExists = () => {
   const cookies = new Cookies();
-  return cookies.get("token") != null;
+  return cookies.get("jwt") != null;
 };
 
 export const defaultHandleErr = (data, setMessage) => {

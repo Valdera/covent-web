@@ -9,12 +9,12 @@ class PatientAPI {
 
   getBearer() {
     const cookies = new Cookies();
-    return `Bearer ${cookies.get("token")}`;
+    return `Bearer ${cookies.get("jwt")}`;
   }
 
   setToken(token) {
     const cookies = new Cookies();
-    cookies.set("token", token, { path: "/" });
+    cookies.set("jwt", token, { path: "/" });
   }
 
   async login(body, handleSuccess = () => {}, handleError = () => {}) {
@@ -63,7 +63,7 @@ class PatientAPI {
   async logout(handleSuccess = () => {}) {
     const cookies = new Cookies();
 
-    cookies.remove("token", { path: "/" });
+    cookies.remove("jwt", { path: "/" });
     handleSuccess();
   }
 }
