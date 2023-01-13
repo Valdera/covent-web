@@ -21,9 +21,14 @@ import { defaultHandleErr } from "resources/utils";
 
 import * as Yup from "yup";
 
-const toLocaleDate = (date) => {
-  const d = new Date(date);
-  return d.toLocaleString();
+const toLocaleDate = (date, offset = 0) => {
+  let d = new Date(date);
+
+  if (offset != 0) {
+    d.setHours(d.getHours() - offset);
+  }
+
+  return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
 };
 
 const AppointmentForm = () => {
@@ -142,8 +147,10 @@ const AppointmentForm = () => {
             <FormLabel>Jadwal yang tersedia</FormLabel>
             <Select
               data={scheduleList.map((v) => {
-                const label = `${toLocaleDate(v.startTime)} - ${toLocaleDate(
-                  v.startTime
+                console.log(v);
+                const label = `${toLocaleDate(v.startTime, 7)} - ${toLocaleDate(
+                  v.endTime,
+                  7
                 )} \n Kapasitas tersedia: ${v.totalPatient} `;
 
                 return { value: v._id, label: label };

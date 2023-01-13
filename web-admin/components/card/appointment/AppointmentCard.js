@@ -29,9 +29,14 @@ const statusToBadge = {
   CANCELLED: "red",
 };
 
-const toLocaleDate = (date) => {
-  const d = new Date(date);
-  return d.toLocaleString();
+const toLocaleDate = (date, offset = 0) => {
+  let d = new Date(date);
+
+  if (offset != 0) {
+    d.setHours(d.getHours() - offset);
+  }
+
+  return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
 };
 
 const AppointmentCard = ({ data }) => {
@@ -67,8 +72,9 @@ const AppointmentCard = ({ data }) => {
         {/* SCHEDULE */}
         <Text className="font-bold">Jadwal: </Text>
         <Input
-          value={`${toLocaleDate(data.schedule.startTime)} - ${toLocaleDate(
-            data.schedule.startTime
+          value={`${toLocaleDate(data.schedule.startTime, 7)} - ${toLocaleDate(
+            data.schedule.endTime,
+            7
           )}`}
           isReadOnly
           variant={"filled"}

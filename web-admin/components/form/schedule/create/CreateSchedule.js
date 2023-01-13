@@ -132,7 +132,7 @@ const CreateScheduleForm = () => {
           isRequired
           isInvalid={formik.errors.endTime && formik.touched["endTime"]}
         >
-          <FormLabel>Waktu Mulai</FormLabel>
+          <FormLabel>Waktu Berakhir</FormLabel>
           <Input
             placeholder="Select Date and Time"
             size="md"

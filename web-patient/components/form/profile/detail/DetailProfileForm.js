@@ -21,7 +21,8 @@ import * as Yup from "yup";
 
 const toLocaleDate = (date) => {
   const d = new Date(date);
-  return d.toLocaleDateString();
+
+  return `${d.toLocaleDateString()}`;
 };
 
 const DetailProfileForm = () => {

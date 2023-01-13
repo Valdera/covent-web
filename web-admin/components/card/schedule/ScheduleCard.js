@@ -1,8 +1,13 @@
 import { Grid, Input, Text } from "@chakra-ui/react";
 
-const toLocaleDate = (date) => {
-  const d = new Date(date);
-  return d.toLocaleString();
+const toLocaleDate = (date, offset = 0) => {
+  let d = new Date(date);
+
+  if (offset != 0) {
+    d.setHours(d.getHours() - offset);
+  }
+
+  return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
 };
 
 const ScheduleCard = ({ data }) => {
@@ -20,14 +25,18 @@ const ScheduleCard = ({ data }) => {
       {/* START TIME */}
       <Text className="font-bold">Waktu Mulai: </Text>
       <Input
-        value={toLocaleDate(data.startTime)}
+        value={toLocaleDate(data.startTime, 7)}
         isReadOnly
         variant={"filled"}
       />
 
       {/* END TIME */}
       <Text className="font-bold">Waktu Berakhir: </Text>
-      <Input value={toLocaleDate(data.endTime)} isReadOnly variant={"filled"} />
+      <Input
+        value={toLocaleDate(data.endTime, 7)}
+        isReadOnly
+        variant={"filled"}
+      />
     </Grid>
   );
 };
